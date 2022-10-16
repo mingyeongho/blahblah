@@ -1,0 +1,60 @@
+@import "../variable.scss";
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  & > .backwards {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    font-weight: bolder;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    & > #backward {
+      cursor: pointer;
+      transition: all 0.5s;
+
+      &:hover {
+        font-weight: bolder;
+        color: $accent-color;
+      }
+    }
+  }
+
+  & > .chat_log {
+    flex: 1;
+  }
+
+  & > .input_wrapper {
+    display: flex;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px 0px,
+      rgba(0, 0, 0, 0.2) 0px 0px 1px 0px;
+    border-radius: 20px;
+
+    & > input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background-color: inherit;
+      padding: 14px 24px;
+      font-size: 1.125rem;
+    }
+
+    & > button {
+      border: none;
+      outline: none;
+      background-color: inherit;
+      cursor: pointer;
+      transition: all 0.5s;
+      margin-right: 8px;
+
+      &:hover {
+        font-weight: bolder;
+        color: $accent-color;
+      }
+    }
+  }
+}

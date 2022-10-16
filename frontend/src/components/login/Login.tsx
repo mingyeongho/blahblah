@@ -1,7 +1,9 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../../styles/login/_login.module.scss";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -10,7 +12,7 @@ const Login = () => {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("LOGIN", name);
+    navigate(`/${name}`);
   };
 
   return (
