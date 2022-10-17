@@ -27,8 +27,13 @@ const Chat = () => {
   };
 
   useEffect(() => {
-    socket.on("broadcast", (arg) => console.log(arg));
+    socket.on("broadcast", (arg) => setLog((prev) => [...prev, { ...arg }]));
   }, []);
+
+  useEffect(() => {
+    document.getElementById("chat_log")!.scrollTop =
+      document.getElementById("chat_log")!.scrollHeight;
+  }, [log]);
 
   return (
     <div className={styles.chat}>
@@ -42,7 +47,20 @@ const Chat = () => {
         </span>
         <span>{room_name}</span>
       </div>
-      <div className={styles.chat_log}></div>
+      <div className={styles.chat_log} id="chat_log">
+        {log.map((cur, idx) => {
+          return (
+            <div
+              key={idx}
+              className={cur.name === name ? styles.right : styles.left}
+            >
+              <span>
+                {cur.name === name ? null : `${cur.name} :`} {cur.message}
+              </span>
+            </div>
+          );
+        })}
+      </div>
       <form className={styles.input_wrapper} onSubmit={onSubmit}>
         <input type="text" value={message} onChange={onChange} />
         <button type="submit">
