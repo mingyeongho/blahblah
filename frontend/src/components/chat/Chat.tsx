@@ -1,25 +1,34 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { SocketContext } from "../../context/socket";
+import { LogProps } from "../../files/interface";
 import styles from "../../styles/chat/_chat.module.scss";
 
 const Chat = () => {
+  const socket = useContext(SocketContext);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const { chat_no } = useParams();
+  const { name, room_name } = useParams();
+  const [log, setLog] = useState<LogProps[]>([]);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
 
   const onClickBackward = () => {
+    socket.emit("leave", { room_name });
     navigate(-1);
   };
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log(message);
+    socket.emit("message", { name, room_name, message });
     setMessage("");
   };
+
+  useEffect(() => {
+    socket.on("broadcast", (arg) => console.log(arg));
+  }, []);
 
   return (
     <div className={styles.chat}>
@@ -31,7 +40,7 @@ const Chat = () => {
         >
           arrow_back
         </span>
-        <span>{chat_no}</span>
+        <span>{room_name}</span>
       </div>
       <div className={styles.chat_log}></div>
       <form className={styles.input_wrapper} onSubmit={onSubmit}>

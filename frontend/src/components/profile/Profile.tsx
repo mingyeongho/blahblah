@@ -1,8 +1,11 @@
+import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { SocketContext } from "../../context/socket";
 import { CHATLIST } from "../../files/constant";
 import styles from "../../styles/profile/_profile.module.scss";
 
 const Profile = () => {
+  const socket = useContext(SocketContext);
   const { name } = useParams();
   const navigate = useNavigate();
 
@@ -11,10 +14,13 @@ const Profile = () => {
   };
 
   const onClickChatList = (e: any) => {
-    if (e.target && e.target.nodeName === "DIV") {
-      navigate(`${e.target.innerHTML}`);
+    const target = e.target;
+    if (target && target.nodeName === "DIV") {
+      socket.emit("room", { room_name: target.innerHTML });
+      navigate(`${target.innerHTML}`);
     }
   };
+
   return (
     <div className={styles.profile}>
       <div className={styles.backwards}>
@@ -29,11 +35,14 @@ const Profile = () => {
         <span className={styles.name}>{name}</span>
       </div>
       <div className={styles.chatlist} onClick={onClickChatList}>
-        {CHATLIST.map((chat, idx) => (
-          <div className={styles.chat} key={idx}>
-            {chat}
-          </div>
-        ))}
+        {CHATLIST.map((chat, idx) => {
+          const { title, pk } = chat;
+          return (
+            <div className={styles.chat} id={`${pk}`} key={idx}>
+              {title}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
